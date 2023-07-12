@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t mahmudoni/app2:latest -f app2/build/Dockerfile.app2 .'
+      }
+    }
+    stage('Push') {
+      steps {
+        sh 'docker push mahmudoni/app2:latest'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh 'kubectl apply -f app2/deploy/deployment.yaml'
+        sh 'kubectl apply -f app2/deploy/configmap.yaml'
+        sh 'kubectl apply -f app2/deploy/service.yaml'
+      }
+    }
+  }
+}
